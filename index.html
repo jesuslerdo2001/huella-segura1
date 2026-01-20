@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Huella Segura</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f6f8ff, #eef3ff);
+    margin: 0;
+    padding: 20px;
+}
+
+.splash {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #3b5bdb;
+    background: white;
+}
+
+.container {
+    max-width: 420px;
+    margin: auto;
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    display: none;
+}
+
+h1 {
+    text-align: center;
+    color: #3b5bdb;
+}
+
+h2 {
+    text-align: center;
+}
+
+input, textarea, button {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save { background: #3b5bdb; color: white; }
+.loc { background: #25D366; color: white; }
+.edit { background: #999; color: white; }
+.reset { background: #e63946; color: white; }
+
+.info {
+    background: #f2f5ff;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="splash" id="splash">🐾 Huella Segura</div>
+
+<div class="container" id="app">
+    <h1>Huella Segura</h1>
+
+    <!-- MODO DUEÑO -->
+    <div id="owner">
+        <h2>Modo Dueño</h2>
+        <input id="petName" placeholder="Nombre de la mascota">
+        <input id="phone" placeholder="WhatsApp (521...)">
+        <textarea id="message" placeholder="Mensaje adicional"></textarea>
+        <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+        <button class="save" onclick="save()">Guardar</button>
+        <button class="reset" id="resetBtn" onclick="resetAll()" style="display:none;">
+            Restablecer configuración
+        </button>
+    </div>
+
+    <!-- MODO VISITANTE -->
+    <div id="visitor" style="display:none;">
+        <h2>🐶 Mascota encontrada</h2>
+        <div class="info" id="info"></div>
+        <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
+        <button class="edit" onclick="unlock()">🔒 Modificar información</button>
+    </div>
+</div>
+
+<script>
+setTimeout(() => {
+    splash.style.display = "none";
+    app.style.display = "block";
+    init();
+}, 5000);
+
+function init() {
+    if (localStorage.getItem("configured") === "true") {
+        if (!localStorage.getItem("pin")) {
+            document.getElementById("resetBtn").style.display = "block";
+        }
+        loadVisitor();
+    } else {
+        loadOwner();
+    }
+}
+
+function loadOwner() {
+    owner.style.display = "block";
+    visitor.style.display = "none";
+
+    petName.value = localStorage.getItem("petName") || "";
+    phone.value = localStorage.getItem("phone") || "";
+    message.value = localStorage.getItem("message") || "";
+}
+
+function loadVisitor() {
+    owner.style.display = "none";
+    visitor.style.display = "block";
+
+    info.innerHTML = `
+        <strong>Nombre:</strong> ${localStorage.getItem("petName")}<br>
+        <strong>Contacto:</strong> ${localStorage.getItem("phone")}<br>
+        <strong>Mensaje:</strong> ${localStorage.getItem("message") || "—"}
+    `;
+}
+
+function save() {
+    if (pin.value.length !== 4) {
+        alert("El PIN debe ser de 4 dígitos.");
+        return;
+    }
+
+    localStorage.setItem("petName", petName.value);
+    localStorage.setItem("phone", phone.value);
+    localStorage.setItem("message", message.value);
+    localStorage.setItem("pin", pin.value);
+    localStorage.setItem("configured", "true");
+
+    loadVisitor();
+}
+
+function unlock() {
+    const entered = prompt("Ingresa el PIN:");
+    if (entered === localStorage.getItem("pin")) {
+        loadOwner();
+    } else {
+        alert("PIN incorrecto");
+    }
+}
+
+function resetAll() {
+    if (confirm("¿Restablecer toda la información?")) {
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+function sendLocation() {
+    if (!navigator.geolocation) {
+        alert("Geolocalización no disponible.");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const msg = `Hola, encontré a tu mascota 🐾. Mi ubicación: https://www.google.com/maps?q=${lat},${lon}`;
+        window.open(`https://wa.me/${localStorage.getItem("phone")}?text=${encodeURIComponent(msg)}`, "_blank");
+    }, err => {
+        alert("Debes aceptar el permiso de ubicación.");
+    });
+}
+</script>
+
+</body>
+</html>
