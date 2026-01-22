@@ -1,38 +1,16 @@
-/* ================= IMPORTS FIREBASE ================= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
-/* ================= CONFIG ================= */
+// 🔥 Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAT8FLvXeSSXXqvGnwHm678GfZWKfBC4tM",
   authDomain: "huella-segura-ef4dd.firebaseapp.com",
   projectId: "huella-segura-ef4dd"
 };
 
-const appFirebase = initializeApp(firebaseConfig);
-const db = getFirestore(appFirebase);
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-/* ================= NFC ID ================= */
-const params = new URLSearchParams(window.location.search);
-const PET_ID = params.get("id");
-
-if (!PET_ID) {
-  alert("Etiqueta NFC inválida");
-  throw new Error("No ID");
-}
-
-const petRef = doc(db, "pets", PET_ID);
-
-/* ================= DOM ================= */
+// DOM
 const splash = document.getElementById("splash");
 const app = document.getElementById("app");
-
 const owner = document.getElementById("owner");
 const visitor = document.getElementById("visitor");
 
@@ -41,107 +19,97 @@ const phone = document.getElementById("phone");
 const message = document.getElementById("message");
 const pin = document.getElementById("pin");
 
+const vPetName = document.getElementById("vPetName");
 const info = document.getElementById("info");
 
-/* ================= SPLASH ================= */
-setTimeout(async () => {
+// URL ID
+const params = new URLSearchParams(window.location.search);
+const PET_ID = params.get("id");
+
+if (!PET_ID) {
+  alert("Etiqueta NFC inválida");
+  throw new Error("ID no proporcionado");
+}
+
+const petRef = db.collection("pets").doc(PET_ID);
+
+// SPLASH
+setTimeout(() => {
   splash.style.display = "none";
   app.style.display = "block";
   init();
-}, 5000);
+}, 3000);
 
-/* ================= INIT ================= */
+// INIT
 async function init() {
-  const snap = await getDoc(petRef);
+  owner.style.display = "none";
+  visitor.style.display = "none";
 
-  if (!snap.exists()) {
-    showOwner();
+  const snap = await petRef.get();
+
+  if (!snap.exists) {
+    owner.style.display = "block";
   } else {
-    showVisitor(snap.data());
+    loadVisitor(snap.data());
   }
 }
 
-/* ================= MODOS ================= */
-function showOwner(data = {}) {
-  owner.style.display = "block";
-  visitor.style.display = "none";
-
-  petName.value = data.petName || "";
-  phone.value = data.phone || "";
-  message.value = data.message || "";
-}
-
-function showVisitor(data) {
-  owner.style.display = "none";
-  visitor.style.display = "block";
-
-  info.innerHTML = `
-    <strong>Nombre:</strong> ${data.petName}<br>
-    <strong>Contacto:</strong> ${data.phone}<br>
-    <strong>Mensaje:</strong> ${data.message || "—"}
-  `;
-}
-
-/* ================= GUARDAR ================= */
+// SAVE
 window.save = async function () {
   if (pin.value.length !== 4) {
     alert("El PIN debe ser de 4 dígitos");
     return;
   }
 
-  await setDoc(petRef, {
+  const data = {
     petName: petName.value,
     phone: phone.value,
     message: message.value,
-    pin: pin.value
-  });
+    pin: pin.value,
+    updated: Date.now()
+  };
 
-  alert("Información guardada");
-  location.reload();
+  await petRef.set(data);
+  loadVisitor(data);
 };
 
-/* ================= DESBLOQUEAR ================= */
+// VISITOR
+function loadVisitor(data) {
+  owner.style.display = "none";
+  visitor.style.display = "block";
+
+  vPetName.textContent = data.petName;
+  info.innerHTML = `
+    <strong>Contacto:</strong> ${data.phone}<br>
+    <strong>Mensaje:</strong> ${data.message || "—"}
+  `;
+}
+
+// UNLOCK
 window.unlock = async function () {
   const entered = prompt("Ingresa el PIN");
-  const snap = await getDoc(petRef);
+  const snap = await petRef.get();
 
-  if (snap.data().pin === entered) {
-    showOwner(snap.data());
+  if (!snap.exists) return;
+
+  if (entered === snap.data().pin) {
+    petName.value = snap.data().petName;
+    phone.value = snap.data().phone;
+    message.value = snap.data().message;
+    pin.value = snap.data().pin;
+
+    visitor.style.display = "none";
+    owner.style.display = "block";
   } else {
     alert("PIN incorrecto");
   }
 };
 
-/* ================= UBICACIÓN ================= */
-window.sendLocation = async function () {
-  if (!navigator.geolocation) {
-    alert("Geolocalización no disponible");
-    return;
-  }
-
-  const snap = await getDoc(petRef);
-  const data = snap.data();
-
-  navigator.geolocation.getCurrentPosition(async pos => {
-    const lat = pos.coords.latitude;
-    const lng = pos.coords.longitude;
-
-    await updateDoc(petRef, {
-      lastScan: {
-        lat,
-        lng,
-        date: new Date()
-      }
-    });
-
-    const text = `Hola, encontré a ${data.petName} 🐾
-https://maps.google.com/?q=${lat},${lng}`;
-
-    window.open(
-      `https://wa.me/${data.phone}?text=${encodeURIComponent(text)}`,
-      "_blank"
-    );
-  }, () => {
-    alert("Permite acceso a ubicación");
-  });
+// LOCATION
+window.sendLocation = function () {
+  navigator.geolocation.getCurrentPosition(pos => {
+    const url = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+    const text = `Hola, encontré a ${vPetName.textContent} 🐾\n${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+  }, () => alert("Permite el acceso a ubicación"));
 };
