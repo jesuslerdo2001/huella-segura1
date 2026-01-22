@@ -5,97 +5,43 @@
 <title>Huella Segura</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #f6f8ff, #eef3ff);
-  margin: 0;
-  padding: 20px;
-}
-
-.splash {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 32px;
-  font-weight: bold;
-  color: #3b5bdb;
-  background: white;
-  z-index: 10;
-}
-
-.container {
-  max-width: 420px;
-  margin: auto;
-  background: white;
-  border-radius: 18px;
-  padding: 25px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  display: none;
-}
-
-h1, h2 {
-  text-align: center;
-  color: #3b5bdb;
-}
-
-input, textarea, button {
-  width: 100%;
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-button {
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.save { background: #3b5bdb; color: white; }
-.loc { background: #25D366; color: white; }
-.edit { background: #999; color: white; }
-
-.info {
-  background: #f2f5ff;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 15px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="splash" id="splash">🐾 Huella Segura</div>
+<!-- SPLASH -->
+<div id="splash">🐾 Huella Segura</div>
 
-<div class="container" id="app">
+<!-- APP -->
+<div id="app" class="container">
+
   <h1>Huella Segura</h1>
 
-  <!-- MODO DUEÑO -->
-  <div id="owner" style="display:none;">
+  <!-- 🧑‍💼 MODO DUEÑO -->
+  <div id="owner">
     <h2>Modo Dueño</h2>
+
     <input id="petName" placeholder="Nombre de la mascota">
     <input id="phone" placeholder="WhatsApp (521...)">
     <textarea id="message" placeholder="Mensaje adicional"></textarea>
     <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+
     <button class="save" onclick="save()">Guardar información</button>
   </div>
 
-  <!-- MODO VISITANTE -->
-  <div id="visitor" style="display:none;">
+  <!-- 👀 MODO VISITANTE -->
+  <div id="visitor">
     <h2>🐶 Mascota encontrada</h2>
-    <div class="info" id="info"></div>
+
+    <div id="info" class="info"></div>
+
     <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
     <button class="edit" onclick="unlock()">🔒 Modificar información</button>
   </div>
+
 </div>
 
 <script type="module" src="script.js"></script>
-
 </body>
 </html>
