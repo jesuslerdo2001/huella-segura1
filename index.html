@@ -5,7 +5,15 @@
 <title>Huella Segura</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<!-- Evitar caché -->
+<meta http-equiv="Cache-Control" content="no-store" />
+<meta http-equiv="Pragma" content="no-cache" />
+
 <link rel="stylesheet" href="style.css">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -14,11 +22,11 @@
 <div id="splash">🐾 Huella Segura</div>
 
 <!-- APP -->
-<div id="app" class="container">
+<div id="app" class="card">
 
   <h1>Huella Segura</h1>
 
-  <!-- 🧑‍💼 MODO DUEÑO -->
+  <!-- MODO DUEÑO -->
   <div id="owner">
     <h2>Modo Dueño</h2>
 
@@ -27,21 +35,21 @@
     <textarea id="message" placeholder="Mensaje adicional"></textarea>
     <input id="pin" type="password" placeholder="PIN de 4 dígitos">
 
-    <button class="save" onclick="save()">Guardar información</button>
+    <button onclick="save()">Guardar información</button>
   </div>
 
-  <!-- 👀 MODO VISITANTE -->
+  <!-- MODO VISITANTE -->
   <div id="visitor">
-    <h2>🐶 Mascota encontrada</h2>
+    <h2 id="vPetName"></h2>
 
-    <div id="info" class="info"></div>
+    <div class="info" id="info"></div>
 
-    <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
-    <button class="edit" onclick="unlock()">🔒 Modificar información</button>
+    <button class="green" onclick="sendLocation()">📍 Enviar ubicación</button>
+    <button class="gray" onclick="unlock()">🔒 Editar información</button>
   </div>
 
 </div>
 
-<script type="module" src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
