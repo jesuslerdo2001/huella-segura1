@@ -1,126 +1,83 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
   background: linear-gradient(135deg, #f6f8ff, #eef3ff);
   margin: 0;
-  padding: 0;
-  min-height: 100vh;
+  padding: 20px;
 }
 
 #splash {
   position: fixed;
   inset: 0;
-  background: #3b5bdb;
-  color: white;
+  background: white;
+  color: #3b5bdb;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.2rem;
+  font-size: 32px;
   font-weight: bold;
-  z-index: 1000;
+  z-index: 10;
 }
 
-.card {
+.container {
   max-width: 420px;
-  margin: 30px auto;
+  margin: auto;
   background: white;
-  border-radius: 20px;
-  padding: 25px 22px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: none;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
   color: #3b5bdb;
-  margin-bottom: 10px;
 }
 
-h2 {
-  text-align: center;
-  color: #222;
-  margin-bottom: 15px;
-}
-
-input, textarea {
+input, textarea, button {
   width: 100%;
-  padding: 14px;
   margin-top: 12px;
-  border-radius: 12px;
+  padding: 12px;
+  border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
 textarea {
   resize: none;
-  min-height: 80px;
 }
 
 button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 14px;
-  border-radius: 14px;
   border: none;
-  font-size: 17px;
-  font-weight: bold;
   cursor: pointer;
+  font-weight: bold;
 }
 
-button:hover {
-  opacity: 0.95;
-}
-
-button.save {
+.save {
   background: #3b5bdb;
   color: white;
 }
 
-button.loc {
+.loc {
   background: #25D366;
   color: white;
 }
 
-button.edit {
-  background: #9ca3af;
+.edit {
+  background: #999;
   color: white;
 }
 
-.hidden {
+.info {
+  background: #f2f5ff;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
+#visitor {
   display: none;
 }
 
-.info-box {
-  background: #f2f5ff;
-  padding: 16px;
-  border-radius: 14px;
-  margin-top: 15px;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.info-box strong {
-  color: #3b5bdb;
-}
-
-/* 📱 OPTIMIZACIÓN MÓVIL */
-@media (max-width: 480px) {
-  .card {
-    margin: 20px 12px;
-    padding: 22px 18px;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-  }
-
-  button {
-    font-size: 16px;
-  }
+#owner {
+  display: none;
 }
