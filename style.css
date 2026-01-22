@@ -1,10 +1,12 @@
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #f6f8ff, #eef3ff);
+  background: linear-gradient(135deg, #eaf0ff, #dbe5ff);
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  text-align: center;
 }
 
+/* SPLASH */
 #splash {
   position: fixed;
   inset: 0;
@@ -13,30 +15,35 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 2em;
   font-weight: bold;
   z-index: 10;
 }
 
-.container {
+/* CARD */
+.card {
   max-width: 420px;
-  margin: auto;
+  margin: 80px auto;
   background: white;
-  border-radius: 18px;
   padding: 25px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
   display: none;
 }
 
-h1, h2 {
-  text-align: center;
+h1 {
   color: #3b5bdb;
 }
 
-input, textarea, button {
+h2 {
+  color: #555;
+}
+
+/* INPUTS */
+input, textarea {
   width: 100%;
-  margin-top: 12px;
   padding: 12px;
+  margin-top: 10px;
   border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 16px;
@@ -46,38 +53,33 @@ textarea {
   resize: none;
 }
 
+/* BUTTONS */
 button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  cursor: pointer;
+  font-size: 16px;
   font-weight: bold;
-}
-
-.save {
+  cursor: pointer;
   background: #3b5bdb;
   color: white;
 }
 
-.loc {
+button.green {
   background: #25D366;
-  color: white;
 }
 
-.edit {
-  background: #999;
-  color: white;
+button.gray {
+  background: #888;
 }
 
+/* INFO */
 .info {
   background: #f2f5ff;
   padding: 15px;
   border-radius: 12px;
   margin-top: 15px;
-}
-
-#visitor {
-  display: none;
-}
-
-#owner {
-  display: none;
+  text-align: left;
 }
