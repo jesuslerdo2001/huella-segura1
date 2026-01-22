@@ -1,133 +1,130 @@
-// ===============================
-// 🔥 FIREBASE
-// ===============================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+<script>
+/* ====== REFERENCIAS DOM ====== */
+const splash = document.getElementById("splash");
+const app = document.getElementById("app");
+const owner = document.getElementById("owner");
+const visitor = document.getElementById("visitor");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAT8FLvXeSSXXqvGnwHm678GfZWKfBC4tM",
-  authDomain: "huella-segura-ef4dd.firebaseapp.com",
-  projectId: "huella-segura-ef4dd",
-};
+const petName = document.getElementById("petName");
+const phone = document.getElementById("phone");
+const message = document.getElementById("message");
+const pin = document.getElementById("pin");
+const info = document.getElementById("info");
+const resetBtn = document.getElementById("resetBtn");
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ===============================
-// 🔎 LEER ID DESDE URL
-// ===============================
+/* ====== ID ÚNICO DESDE URL ====== */
 const params = new URLSearchParams(window.location.search);
-const petId = params.get("id");
+const PET_ID = params.get("id");
 
-// ===============================
-// 🔄 EVITAR CACHÉ NFC / MÓVIL
-// ===============================
-window.addEventListener("pageshow", e => {
-  if (e.persisted) window.location.reload();
-});
-
-// ===============================
-// 🐾 ESTADO
-// ===============================
-let petData = null;
-
-// ===============================
-// 🚀 INICIO
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-  if (!petId) {
-    alert("NFC inválido");
-    return;
-  }
-  cargarMascota();
-});
-
-// ===============================
-// 📥 CARGAR MASCOTA
-// ===============================
-async function cargarMascota() {
-  petData = null;
-
-  const ref = doc(db, "pets", petId);
-  const snap = await getDoc(ref);
-
-  if (snap.exists()) {
-    petData = snap.data();
-    mostrarVisitante();
-  } else {
-    mostrarDueño();
-  }
+if (!PET_ID) {
+    alert("Etiqueta NFC inválida (ID no encontrado)");
 }
 
-// ===============================
-// 👤 MODO DUEÑO
-// ===============================
-function mostrarDueño() {
-  document.getElementById("ownerMode").classList.remove("hidden");
-  document.getElementById("visitorMode").classList.add("hidden");
+/* ====== CLAVE ÚNICA POR MASCOTA ====== */
+const STORAGE_KEY = `huella_${PET_ID}`;
+
+/* ====== SPLASH ====== */
+setTimeout(() => {
+    splash.style.display = "none";
+    app.style.display = "block";
+    init();
+}, 5000);
+
+/* ====== INICIO ====== */
+function init() {
+    const data = getData();
+    if (data) {
+        loadVisitor(data);
+    } else {
+        loadOwner();
+    }
 }
 
-async function guardarDatos() {
-  const data = {
-    nombre: nombre.value,
-    telefono: telefono.value,
-    mensaje: mensaje.value,
-    pin: pin.value
-  };
-
-  if (!data.nombre || !data.telefono || data.pin.length < 4) {
-    alert("Completa todos los campos");
-    return;
-  }
-
-  await setDoc(doc(db, "pets", petId), data);
-  petData = data;
-  mostrarVisitante();
+/* ====== STORAGE ====== */
+function getData() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
 }
 
-// ===============================
-// 👀 MODO VISITANTE
-// ===============================
-function mostrarVisitante() {
-  document.getElementById("ownerMode").classList.add("hidden");
-  document.getElementById("visitorMode").classList.remove("hidden");
-
-  petName.textContent = "🐾 " + petData.nombre;
-  petMsg.textContent = petData.mensaje;
+function setData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// ===============================
-// 📍 WHATSAPP UBICACIÓN
-// ===============================
-function enviarUbicacion() {
-  navigator.geolocation.getCurrentPosition(pos => {
-    const { latitude, longitude } = pos.coords;
-
-    const texto = `Hola, encontré a tu mascota 🐾
-Mi ubicación es:
-https://maps.google.com/?q=${latitude},${longitude}`;
-
-    const url = `https://wa.me/${petData.telefono}?text=${encodeURIComponent(texto)}`;
-    window.open(url, "_blank");
-  }, () => alert("No se pudo obtener la ubicación"));
+/* ====== MODOS ====== */
+function loadOwner() {
+    owner.style.display = "block";
+    visitor.style.display = "none";
 }
 
-// ===============================
-// 🔐 PIN
-// ===============================
-function mostrarPin() {
-  document.getElementById("pinBox").classList.remove("hidden");
+function loadVisitor(data) {
+    owner.style.display = "none";
+    visitor.style.display = "block";
+
+    info.innerHTML = `
+        <strong>Nombre:</strong> ${data.petName}<br>
+        <strong>Contacto:</strong> ${data.phone}<br>
+        <strong>Mensaje:</strong> ${data.message || "—"}
+    `;
 }
 
-function verificarPin() {
-  if (pinVerify.value === petData.pin) {
-    mostrarDueño();
-  } else {
-    alert("PIN incorrecto");
-  }
+/* ====== GUARDAR ====== */
+function save() {
+    if (pin.value.length !== 4) {
+        alert("El PIN debe ser de 4 dígitos");
+        return;
+    }
+
+    const data = {
+        petName: petName.value,
+        phone: phone.value,
+        message: message.value,
+        pin: pin.value
+    };
+
+    setData(data);
+    loadVisitor(data);
 }
+
+/* ====== DESBLOQUEAR ====== */
+function unlock() {
+    const data = getData();
+    const entered = prompt("Ingresa el PIN");
+
+    if (entered === data.pin) {
+        petName.value = data.petName;
+        phone.value = data.phone;
+        message.value = data.message;
+        owner.style.display = "block";
+        visitor.style.display = "none";
+    } else {
+        alert("PIN incorrecto");
+    }
+}
+
+/* ====== RESETEAR ====== */
+function resetAll() {
+    if (confirm("¿Eliminar la información de esta mascota?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+    }
+}
+
+/* ====== WHATSAPP CON UBICACIÓN ====== */
+function sendLocation() {
+    const data = getData();
+
+    if (!navigator.geolocation) {
+        alert("Geolocalización no disponible");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const text = `Hola, encontré a ${data.petName} 🐾\nMi ubicación: https://www.google.com/maps?q=${lat},${lon}`;
+        window.open(`https://wa.me/${data.phone}?text=${encodeURIComponent(text)}`, "_blank");
+    }, () => {
+        alert("Debes permitir la ubicación");
+    });
+}
+</script>
