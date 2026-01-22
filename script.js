@@ -1,4 +1,4 @@
-/* ================= FIREBASE IMPORTS ================= */
+/* ================= IMPORTS FIREBASE ================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import {
   getFirestore,
@@ -8,7 +8,7 @@ import {
   updateDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-/* ================= CONFIG FIREBASE ================= */
+/* ================= CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyAT8FLvXeSSXXqvGnwHm678GfZWKfBC4tM",
   authDomain: "huella-segura-ef4dd.firebaseapp.com",
@@ -18,13 +18,13 @@ const firebaseConfig = {
 const appFirebase = initializeApp(firebaseConfig);
 const db = getFirestore(appFirebase);
 
-/* ================= ID DESDE NFC ================= */
+/* ================= NFC ID ================= */
 const params = new URLSearchParams(window.location.search);
 const PET_ID = params.get("id");
 
 if (!PET_ID) {
   alert("Etiqueta NFC inválida");
-  throw new Error("ID no encontrado");
+  throw new Error("No ID");
 }
 
 const petRef = doc(db, "pets", PET_ID);
@@ -47,7 +47,7 @@ const info = document.getElementById("info");
 setTimeout(async () => {
   splash.style.display = "none";
   app.style.display = "block";
-  await init();
+  init();
 }, 5000);
 
 /* ================= INIT ================= */
@@ -96,7 +96,7 @@ window.save = async function () {
     pin: pin.value
   });
 
-  alert("Información guardada correctamente");
+  alert("Información guardada");
   location.reload();
 };
 
@@ -112,7 +112,7 @@ window.unlock = async function () {
   }
 };
 
-/* ================= UBICACIÓN (FASE 2) ================= */
+/* ================= UBICACIÓN ================= */
 window.sendLocation = async function () {
   if (!navigator.geolocation) {
     alert("Geolocalización no disponible");
@@ -142,6 +142,6 @@ https://maps.google.com/?q=${lat},${lng}`;
       "_blank"
     );
   }, () => {
-    alert("Debes permitir el acceso a la ubicación");
+    alert("Permite acceso a ubicación");
   });
 };
