@@ -54,10 +54,8 @@ function showVisitor(data) {
   visitor.classList.remove("hidden");
 
   petTitle.textContent = data.petName;
-  petInfo.innerHTML = `
-    📞 ${data.phone}<br>
-    📝 ${data.message || "Sin mensaje"}
-  `;
+document.getElementById("petPhone").textContent = data.phone;
+document.getElementById("petMsg").textContent = data.message || "—";
 }
 
 /* ====== FUNCIONES GLOBALES ====== */
@@ -103,3 +101,4 @@ window.sendLocation = () => {
 };
 
 });
+
