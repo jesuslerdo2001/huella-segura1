@@ -5,48 +5,97 @@
 <title>Huella Segura</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="style.css">
+<style>
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f6f8ff, #eef3ff);
+  margin: 0;
+  padding: 20px;
+}
 
-<meta http-equiv="Cache-Control" content="no-store">
-<meta http-equiv="Pragma" content="no-cache">
+.splash {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  color: #3b5bdb;
+  background: white;
+  z-index: 10;
+}
 
+.container {
+  max-width: 420px;
+  margin: auto;
+  background: white;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  display: none;
+}
+
+h1, h2 {
+  text-align: center;
+  color: #3b5bdb;
+}
+
+input, textarea, button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.save { background: #3b5bdb; color: white; }
+.loc { background: #25D366; color: white; }
+.edit { background: #999; color: white; }
+
+.info {
+  background: #f2f5ff;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+</style>
 </head>
+
 <body>
 
-<div id="splash">🐾 Huella Segura</div>
+<div class="splash" id="splash">🐾 Huella Segura</div>
 
-<div class="card hidden" id="app">
+<div class="container" id="app">
+  <h1>Huella Segura</h1>
 
-<h1>Huella Segura</h1>
-
-<!-- MODO DUEÑO -->
-<div id="owner">
-  <h2>Modo Dueño</h2>
-  <input id="petName" placeholder="Nombre de la mascota">
-  <input id="phone" placeholder="WhatsApp (521...)">
-  <textarea id="message" placeholder="Mensaje adicional"></textarea>
-  <input id="pin" type="password" placeholder="PIN de 4 dígitos">
-  <button onclick="save()">Guardar información</button>
-</div>
-
-<!-- MODO VISITANTE -->
-<div id="visitor" class="hidden">
-  <h2>🐶 Mascota encontrada</h2>
-
-  <div class="info-box">
-    <strong>Nombre:</strong> <span id="petTitle"></span><br>
-    <strong>Contacto:</strong> <span id="petPhone"></span><br>
-    <strong>Mensaje:</strong> <span id="petMsg"></span>
+  <!-- MODO DUEÑO -->
+  <div id="owner" style="display:none;">
+    <h2>Modo Dueño</h2>
+    <input id="petName" placeholder="Nombre de la mascota">
+    <input id="phone" placeholder="WhatsApp (521...)">
+    <textarea id="message" placeholder="Mensaje adicional"></textarea>
+    <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+    <button class="save" onclick="save()">Guardar información</button>
   </div>
 
-  <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
-  <button class="edit" onclick="unlock()">🔒 Modificar información</button>
+  <!-- MODO VISITANTE -->
+  <div id="visitor" style="display:none;">
+    <h2>🐶 Mascota encontrada</h2>
+    <div class="info" id="info"></div>
+    <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
+    <button class="edit" onclick="unlock()">🔒 Modificar información</button>
+  </div>
 </div>
 
+<script type="module" src="script.js"></script>
 
-</div>
-
-<script src="script.js"></script>
 </body>
 </html>
-
