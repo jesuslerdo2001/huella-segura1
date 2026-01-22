@@ -31,14 +31,22 @@
 
 <!-- MODO VISITANTE -->
 <div id="visitor" class="hidden">
-  <h2 id="petTitle"></h2>
-  <p id="petInfo"></p>
-  <button onclick="sendLocation()">📍 Enviar ubicación</button>
-  <button onclick="unlock()">🔒 Modificar</button>
+  <h2>🐶 Mascota encontrada</h2>
+
+  <div class="info-box">
+    <strong>Nombre:</strong> <span id="petTitle"></span><br>
+    <strong>Contacto:</strong> <span id="petPhone"></span><br>
+    <strong>Mensaje:</strong> <span id="petMsg"></span>
+  </div>
+
+  <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
+  <button class="edit" onclick="unlock()">🔒 Modificar información</button>
 </div>
+
 
 </div>
 
 <script src="script.js"></script>
 </body>
 </html>
+
