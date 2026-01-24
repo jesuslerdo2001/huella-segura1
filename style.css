@@ -1,8 +1,7 @@
 body {
-  font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #e6ecff, #d0dbff);
+  font-family: system-ui, Arial, sans-serif;
+  background: linear-gradient(135deg, #e8eeff, #cdd9ff);
   margin: 0;
-  padding: 0;
   text-align: center;
 }
 
@@ -15,31 +14,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.3em;
+  font-size: 2.2em;
   font-weight: bold;
   z-index: 10;
 }
 
-/* CONTAINER */
+/* CONTENEDOR */
 .container {
   max-width: 420px;
-  margin: 60px auto;
+  margin: 80px auto;
   padding: 15px;
   display: none;
 }
 
-/* CARD */
+/* TARJETA */
 .card {
   background: white;
-  padding: 22px;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 12px 25px rgba(0,0,0,.15);
 }
 
-/* TEXT */
+/* TEXTO */
 h1 {
   color: #3b5bdb;
-  margin-bottom: 15px;
 }
 
 h2 {
@@ -49,7 +47,7 @@ h2 {
 /* INPUTS */
 input, textarea {
   width: 100%;
-  padding: 13px;
+  padding: 12px;
   margin-top: 10px;
   border-radius: 12px;
   border: 1px solid #ccc;
@@ -60,11 +58,11 @@ textarea {
   resize: none;
 }
 
-/* BUTTONS */
+/* BOTONES */
 button {
   width: 100%;
   margin-top: 15px;
-  padding: 15px;
+  padding: 14px;
   border-radius: 14px;
   border: none;
   font-size: 16px;
@@ -74,20 +72,14 @@ button {
   color: white;
 }
 
-button.green {
-  background: #25D366;
-}
-
-button.gray {
-  background: #888;
-}
+button.green { background: #25D366; }
+button.gray { background: #888; }
 
 /* INFO */
 .info {
-  background: #f2f5ff;
+  background: #eef2ff;
   padding: 15px;
   border-radius: 12px;
   margin-top: 15px;
   text-align: left;
-  font-size: 15px;
 }
