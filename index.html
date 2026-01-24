@@ -11,7 +11,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-  <!-- Script principal -->
   <script src="script.js" defer></script>
 </head>
 
@@ -23,7 +22,7 @@
 
   <h1>Huella Segura</h1>
 
-  <!-- MODO DUEÑO -->
+  <!-- DUEÑO -->
   <div id="owner" class="card">
     <h2>Modo Dueño</h2>
 
@@ -35,10 +34,9 @@
     <button onclick="save()">Guardar información</button>
   </div>
 
-  <!-- MODO VISITANTE -->
-  <div id="visitor" class="card">
+  <!-- VISITANTE -->
+  <div id="visitor" class="card" style="display:none;">
     <h2 id="vPetName"></h2>
-
     <div class="info" id="info"></div>
 
     <button class="green" onclick="sendLocation()">📍 Enviar ubicación</button>
