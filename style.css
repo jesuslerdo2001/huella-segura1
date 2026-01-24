@@ -1,126 +1,91 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Segoe UI', Arial, sans-serif;
-  background: linear-gradient(135deg, #f6f8ff, #eef3ff);
+  background: linear-gradient(135deg, #e6ecff, #d0dbff);
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  text-align: center;
 }
 
+/* SPLASH */
 #splash {
   position: fixed;
   inset: 0;
-  background: #3b5bdb;
-  color: white;
+  background: white;
+  color: #3b5bdb;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.2rem;
+  font-size: 2.2em;
   font-weight: bold;
-  z-index: 1000;
+  z-index: 10;
 }
 
-.card {
+/* CONTAINER */
+.container {
   max-width: 420px;
-  margin: 30px auto;
-  background: white;
-  border-radius: 20px;
-  padding: 25px 22px;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  margin: 80px auto;
+  padding: 15px;
+  display: none;
 }
 
+/* CARD */
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+}
+
+/* TEXT */
 h1 {
-  text-align: center;
   color: #3b5bdb;
-  margin-bottom: 10px;
 }
 
 h2 {
-  text-align: center;
-  color: #222;
-  margin-bottom: 15px;
+  color: #555;
 }
 
+/* INPUTS */
 input, textarea {
   width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
 textarea {
   resize: none;
-  min-height: 80px;
 }
 
+/* BUTTONS */
 button {
   width: 100%;
+  margin-top: 15px;
   padding: 14px;
-  margin-top: 14px;
-  border-radius: 14px;
+  border-radius: 12px;
   border: none;
-  font-size: 17px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.95;
-}
-
-button.save {
   background: #3b5bdb;
   color: white;
 }
 
-button.loc {
+button.green {
   background: #25D366;
-  color: white;
 }
 
-button.edit {
-  background: #9ca3af;
-  color: white;
+button.gray {
+  background: #888;
 }
 
-.hidden {
-  display: none;
-}
-
-.info-box {
+/* INFO */
+.info {
   background: #f2f5ff;
-  padding: 16px;
-  border-radius: 14px;
+  padding: 15px;
+  border-radius: 12px;
   margin-top: 15px;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.info-box strong {
-  color: #3b5bdb;
-}
-
-/* 📱 OPTIMIZACIÓN MÓVIL */
-@media (max-width: 480px) {
-  .card {
-    margin: 20px 12px;
-    padding: 22px 18px;
-  }
-
-  h1 {
-    font-size: 1.6rem;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-  }
-
-  button {
-    font-size: 16px;
-  }
+  text-align: left;
 }
