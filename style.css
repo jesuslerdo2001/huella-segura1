@@ -1,7 +1,8 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #e6ecff, #c7d2ff);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #e6ecff, #d0dbff);
   margin: 0;
+  padding: 0;
   text-align: center;
 }
 
@@ -10,70 +11,83 @@ body {
   position: fixed;
   inset: 0;
   background: white;
-  color: #2f54eb;
+  color: #3b5bdb;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 2em;
+  justify-content: center;
+  font-size: 2.3em;
   font-weight: bold;
   z-index: 10;
 }
 
-/* APP */
+/* CONTAINER */
 .container {
   max-width: 420px;
-  margin: auto;
+  margin: 60px auto;
   padding: 15px;
+  display: none;
 }
 
 /* CARD */
 .card {
   background: white;
-  padding: 20px;
-  border-radius: 18px;
-  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  padding: 22px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
 }
 
 /* TEXT */
-h1 { color: #2f54eb; }
+h1 {
+  color: #3b5bdb;
+  margin-bottom: 15px;
+}
+
+h2 {
+  color: #444;
+}
 
 /* INPUTS */
 input, textarea {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   margin-top: 10px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #ccc;
   font-size: 16px;
 }
 
-/* BUTTON */
-button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 15px;
-  border-radius: 12px;
-  border: none;
-  background: #2f54eb;
-  color: white;
-  font-weight: bold;
-  font-size: 16px;
+textarea {
+  resize: none;
 }
 
-button.green { background: #25D366; }
-button.gray { background: #777; }
+/* BUTTONS */
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 14px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #3b5bdb;
+  color: white;
+}
+
+button.green {
+  background: #25D366;
+}
+
+button.gray {
+  background: #888;
+}
 
 /* INFO */
 .info {
-  background: #f0f4ff;
-  padding: 12px;
-  border-radius: 10px;
+  background: #f2f5ff;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 15px;
   text-align: left;
-}
-
-/* MOBILE */
-@media (max-width: 600px) {
-  .container {
-    margin-top: 30px;
-  }
+  font-size: 15px;
 }
