@@ -1,8 +1,16 @@
-document.addEventListener("DOMContentLoaded", () => {
+// 🔥 Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAT8FLvXeSSXXqvGnwHm678GfZWKfBC4tM",
+  authDomain: "huella-segura-ef4dd.firebaseapp.com",
+  projectId: "huella-segura-ef4dd"
+};
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// DOM
 const splash = document.getElementById("splash");
 const app = document.getElementById("app");
-
 const owner = document.getElementById("owner");
 const visitor = document.getElementById("visitor");
 
@@ -11,56 +19,43 @@ const phone = document.getElementById("phone");
 const message = document.getElementById("message");
 const pin = document.getElementById("pin");
 
-const petTitle = document.getElementById("petTitle");
-const petInfo = document.getElementById("petInfo");
+const vPetName = document.getElementById("vPetName");
+const info = document.getElementById("info");
 
+// Obtener ID del NFC
 const params = new URLSearchParams(window.location.search);
 const PET_ID = params.get("id");
 
 if (!PET_ID) {
   alert("Etiqueta NFC inválida");
-  return;
+  throw new Error("ID no encontrado");
 }
 
-const STORAGE_KEY = `huella_${PET_ID}`;
+const petRef = db.collection("pets").doc(PET_ID);
 
+// Splash
 setTimeout(() => {
   splash.style.display = "none";
-  app.classList.remove("hidden");
+  app.style.display = "block";
   init();
-}, 5000);
+}, 3000);
 
-function init() {
-  const data = loadData();
-  data ? showVisitor(data) : showOwner();
+// Inicializar
+async function init() {
+  owner.style.display = "none";
+  visitor.style.display = "none";
+
+  const doc = await petRef.get();
+
+  if (!doc.exists) {
+    owner.style.display = "block";
+  } else {
+    loadVisitor(doc.data());
+  }
 }
 
-function loadData() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  return raw ? JSON.parse(raw) : null;
-}
-
-function saveData(data) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function showOwner() {
-  owner.classList.remove("hidden");
-  visitor.classList.add("hidden");
-}
-
-function showVisitor(data) {
-  owner.classList.add("hidden");
-  visitor.classList.remove("hidden");
-
-  petTitle.textContent = data.petName;
-document.getElementById("petPhone").textContent = data.phone;
-document.getElementById("petMsg").textContent = data.message || "—";
-}
-
-/* ====== FUNCIONES GLOBALES ====== */
-
-window.save = () => {
+// Guardar datos
+window.save = async function () {
   if (pin.value.length !== 4) {
     alert("El PIN debe ser de 4 dígitos");
     return;
@@ -70,34 +65,54 @@ window.save = () => {
     petName: petName.value,
     phone: phone.value,
     message: message.value,
-    pin: pin.value
+    pin: pin.value,
+    updatedAt: Date.now()
   };
 
-  saveData(data);
-  showVisitor(data);
+  await petRef.set(data);
+  loadVisitor(data);
 };
 
-window.unlock = () => {
-  const data = loadData();
-  const entered = prompt("Ingresa el PIN");
+// Mostrar visitante
+function loadVisitor(data) {
+  owner.style.display = "none";
+  visitor.style.display = "block";
 
-  if (entered === data.pin) {
-    petName.value = data.petName;
-    phone.value = data.phone;
-    message.value = data.message;
-    showOwner();
+  vPetName.textContent = data.petName;
+  info.innerHTML = `
+    <strong>Contacto:</strong> ${data.phone}<br>
+    <strong>Mensaje:</strong> ${data.message || "—"}
+  `;
+}
+
+// Desbloquear edición
+window.unlock = async function () {
+  const entered = prompt("Ingresa el PIN");
+  const doc = await petRef.get();
+
+  if (!doc.exists) return;
+
+  if (entered === doc.data().pin) {
+    petName.value = doc.data().petName;
+    phone.value = doc.data().phone;
+    message.value = doc.data().message;
+    pin.value = doc.data().pin;
+
+    visitor.style.display = "none";
+    owner.style.display = "block";
   } else {
     alert("PIN incorrecto");
   }
 };
 
-window.sendLocation = () => {
-  const data = loadData();
-  navigator.geolocation.getCurrentPosition(pos => {
-    const url = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-    const msg = `Hola, encontré a ${data.petName} 🐾\n${url}`;
-    window.open(`https://wa.me/${data.phone}?text=${encodeURIComponent(msg)}`, "_blank");
-  }, () => alert("Permite ubicación"));
+// Enviar ubicación
+window.sendLocation = function () {
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const map = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
+      const text = `Hola, encontré a ${vPetName.textContent} 🐾\n${map}`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+    },
+    () => alert("Permite el acceso a la ubicación")
+  );
 };
-
-});
