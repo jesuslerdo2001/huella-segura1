@@ -1,4 +1,4 @@
-// 🔥 Firebase Config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyAT8FLvXeSSXXqvGnwHm678GfZWKfBC4tM",
   authDomain: "huella-segura-ef4dd.firebaseapp.com",
@@ -22,42 +22,48 @@ const pin = document.getElementById("pin");
 const vPetName = document.getElementById("vPetName");
 const info = document.getElementById("info");
 
-// Obtener ID del NFC
+// Obtener ID
 const params = new URLSearchParams(window.location.search);
 const PET_ID = params.get("id");
 
 if (!PET_ID) {
-  alert("Etiqueta NFC inválida");
+  alert("❌ NFC sin ID");
   throw new Error("ID no encontrado");
 }
 
 const petRef = db.collection("pets").doc(PET_ID);
 
-// Splash
+// Mostrar app SIEMPRE aunque falle Firebase
 setTimeout(() => {
   splash.style.display = "none";
   app.style.display = "block";
   init();
-}, 3000);
+}, 1500);
 
 // Inicializar
 async function init() {
-  owner.style.display = "none";
-  visitor.style.display = "none";
+  try {
+    owner.style.display = "none";
+    visitor.style.display = "none";
 
-  const doc = await petRef.get();
+    const doc = await petRef.get();
 
-  if (!doc.exists) {
-    owner.style.display = "block";
-  } else {
-    loadVisitor(doc.data());
+    if (!doc.exists) {
+      owner.style.display = "block";
+    } else {
+      loadVisitor(doc.data());
+    }
+
+  } catch (e) {
+    console.error("Firebase error:", e);
+    owner.style.display = "block"; // fallback modo dueño
   }
 }
 
-// Guardar datos
+// Guardar
 window.save = async function () {
   if (pin.value.length !== 4) {
-    alert("El PIN debe ser de 4 dígitos");
+    alert("PIN debe ser 4 dígitos");
     return;
   }
 
@@ -78,18 +84,18 @@ function loadVisitor(data) {
   owner.style.display = "none";
   visitor.style.display = "block";
 
-  vPetName.textContent = data.petName;
+  vPetName.textContent = data.petName || "Mascota registrada";
   info.innerHTML = `
-    <strong>Contacto:</strong> ${data.phone}<br>
-    <strong>Mensaje:</strong> ${data.message || "—"}
+    <b>Contacto:</b> ${data.phone}<br>
+    <b>Mensaje:</b> ${data.message || "—"}
   `;
 }
 
-// Desbloquear edición
+// Editar
 window.unlock = async function () {
-  const entered = prompt("Ingresa el PIN");
-  const doc = await petRef.get();
+  const entered = prompt("PIN:");
 
+  const doc = await petRef.get();
   if (!doc.exists) return;
 
   if (entered === doc.data().pin) {
@@ -105,14 +111,11 @@ window.unlock = async function () {
   }
 };
 
-// Enviar ubicación
+// Ubicación
 window.sendLocation = function () {
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      const map = `https://www.google.com/maps?q=${pos.coords.latitude},${pos.coords.longitude}`;
-      const text = `Hola, encontré a ${vPetName.textContent} 🐾\n${map}`;
-      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
-    },
-    () => alert("Permite el acceso a la ubicación")
-  );
+  navigator.geolocation.getCurrentPosition(pos => {
+    const map = `https://maps.google.com/?q=${pos.coords.latitude},${pos.coords.longitude}`;
+    const text = `Encontré a ${vPetName.textContent} 🐾\n${map}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+  });
 };
