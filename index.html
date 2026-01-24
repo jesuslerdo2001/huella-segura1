@@ -5,7 +5,6 @@
   <title>Huella Segura</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Estilos -->
   <link rel="stylesheet" href="style.css">
 
   <!-- Firebase -->
@@ -24,18 +23,24 @@
 
   <h1>Huella Segura</h1>
 
-  <div id="owner" class="card" style="display:none;">
+  <!-- MODO DUEÑO -->
+  <div id="owner" class="card">
     <h2>Modo Dueño</h2>
+
     <input id="petName" placeholder="Nombre de la mascota">
     <input id="phone" placeholder="WhatsApp (521...)">
     <textarea id="message" placeholder="Mensaje adicional"></textarea>
     <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+
     <button onclick="save()">Guardar información</button>
   </div>
 
-  <div id="visitor" class="card" style="display:none;">
+  <!-- MODO VISITANTE -->
+  <div id="visitor" class="card">
     <h2 id="vPetName"></h2>
+
     <div class="info" id="info"></div>
+
     <button class="green" onclick="sendLocation()">📍 Enviar ubicación</button>
     <button class="gray" onclick="unlock()">🔒 Editar información</button>
   </div>
