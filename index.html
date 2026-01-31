@@ -1,49 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Huella Segura</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Huella Segura</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
 
-  <script src="script.js" defer></script>
 </head>
-
 <body>
 
 <div id="splash">🐾 Huella Segura</div>
 
-<div id="app" class="container">
+<div class="card hidden" id="app">
 
-  <h1>Huella Segura</h1>
+<h1>Huella Segura</h1>
 
-  <!-- DUEÑO -->
-  <div id="owner" class="card">
-    <h2>Modo Dueño</h2>
+<!-- MODO DUEÑO -->
+<div id="owner">
+  <h2>Modo Dueño</h2>
+  <input id="petName" placeholder="Nombre de la mascota">
+  <input id="phone" placeholder="WhatsApp (521...)">
+  <textarea id="message" placeholder="Mensaje adicional"></textarea>
+  <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+  <button onclick="save()">Guardar información</button>
+</div>
 
-    <input id="petName" placeholder="Nombre de la mascota">
-    <input id="phone" placeholder="WhatsApp (521...)">
-    <textarea id="message" placeholder="Mensaje adicional"></textarea>
-    <input id="pin" type="password" placeholder="PIN de 4 dígitos">
+<!-- MODO VISITANTE -->
+<div id="visitor" class="hidden">
+  <h2>🐶 Mascota encontrada</h2>
 
-    <button onclick="save()">Guardar información</button>
+  <div class="info-box">
+    <strong>Nombre:</strong> <span id="petTitle"></span><br>
+    <strong>Contacto:</strong> <span id="petPhone"></span><br>
+    <strong>Mensaje:</strong> <span id="petMsg"></span>
   </div>
 
-  <!-- VISITANTE -->
-  <div id="visitor" class="card" style="display:none;">
-    <h2 id="vPetName"></h2>
-    <div class="info" id="info"></div>
+  <button class="loc" onclick="sendLocation()">📍 Enviar ubicación por WhatsApp</button>
+  <button class="edit" onclick="unlock()">🔒 Modificar información</button>
+</div>
 
-    <button class="green" onclick="sendLocation()">📍 Enviar ubicación</button>
-    <button class="gray" onclick="unlock()">🔒 Editar información</button>
-  </div>
 
 </div>
 
+<script src="script.js"></script>
 </body>
 </html>
+
